@@ -378,6 +378,7 @@ In `app/controllers/posts_controller.rb`, we can simply fetch the post or posts 
 So fresh and so clean. Let's take care of one more thing. Now that @posts and @post are ActiveRecord objects and not vanilla hashes, let's edit our views to use more idiomatic syntax. For example, instead of `@post[:title]`, type `@post.title`.
 
 `app/views/index.html.erb`:
+
     <h1>Lighthouse Forum</h1>
     <hr>
     <% @posts.each do |post| %>
@@ -387,6 +388,7 @@ So fresh and so clean. Let's take care of one more thing. Now that @posts and @p
     <% end %>
 
 `app/views/show.html.erb`:
+
     <h2><%= @post.title %></h2>
     <p><%= @post.text %></p>
     <small>- <%= @post.author %></small>
