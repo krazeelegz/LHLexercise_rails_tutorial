@@ -16,11 +16,11 @@ Before we commit, it's a good idea to find your `README.rdoc` that's auto-genera
 
 ## 2. routing /posts to /posts/index.html.erb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/e7165e9c0d49d8add2b177685e8f7126a0f00b16)
 
-Believe it or not at this point, we can already display a page. In the console, type `rails server`, and you'll see the line `Rails [X.X.X] application starting in development on http://0.0.0.0:3000` (among others). This means—you guessed it—you can visit 0.0.0.0:3000 or localhost:3000 in your browser and see the "Welcome aboard" default Rails page. Success!
+Believe it or not at this point, we can already display a page. In the console, type `rails server`, and you'll see the line `Rails [X.X.X] application starting in development on http://0.0.0.0:3000` (among others). This means—you guessed it—you can visit 0.0.0.0:3000 or [localhost:3000](http://localhost:3000) in your browser and see the "Welcome aboard" default Rails page. Success!
 
-For this app, we'll need a page that displays all posts. The typical URL structure for such a page is [root]/posts, so let's try to get localhost:3000/posts to display a list of posts. (We don't have them yet, but we will very soon.)
+For this app, we'll need a page that displays all posts. The typical URL structure for such a page is `[root]/posts`, so let's try to get [localhost:3000/posts](http://localhost:3000/posts) to display a list of posts. (We don't have them yet, but we will very soon.)
 
-If you visit localhost:3000/posts now, you'll see an error saying "No route matches `[GET] "/posts"`". This implies we sent a GET request to "/posts", but Rails wasn't sure what we were trying to do. Let's help it.
+If you visit [localhost:3000/posts](http://localhost:3000/posts) now, you'll see an error saying "No route matches `[GET] "/posts"`". This implies we sent a GET request to "/posts", but Rails wasn't sure what we were trying to do. Let's help it.
 
 Find your `config/routes.rb` and add this code:
 
@@ -31,7 +31,7 @@ Find your `config/routes.rb` and add this code:
       # [tons of helpful comments]
     end
 
-As you can get, this is where Rails' routing is handled. Now when we visit localhost:3000/posts, we see Rails has successfully routed the request. It recognized the request to `posts` as a GET request.
+As you can get, this is where [Rails' routing](http://guides.rubyonrails.org/routing.html) is handled. Now when we visit localhost:3000/posts, we see Rails has successfully routed the request. It recognized the request to `posts` as a GET request.
 
 But now we have another error: "uninitialized constant PostsController". Let's fix this by putting said PostsController in the correct spot. From the console, `touch app/controllers/posts_controller.rb`, and write the following code:
 
@@ -39,9 +39,9 @@ But now we have another error: "uninitialized constant PostsController". Let's f
       
     end
 
-As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `ActionController::Base` which is where the real magic happens.)
+As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `[ActionController::Base](http://guides.rubyonrails.org/action_controller_overview.html)` which is where the real magic happens.)
 
-Visit localhost:3000/posts once more and it's found `PostsController`, but unfortunately it's letting us know the "action `index` could not be found for `PostsController`." Makes sense. We've written `get 'posts', to: 'posts#**index**'` but there's no `index` in our `PostsController`. Let's add it:
+Visit [localhost:3000/posts](http://localhost:3000/posts) once more and it's found `PostsController`, but unfortunately it's letting us know the "action `index` could not be found for `PostsController`." Makes sense. We've written `get 'posts', to: 'posts#**index**'` but there's no `index` in our `PostsController`. Let's add it:
 
     class PostsController < ApplicationController
 
