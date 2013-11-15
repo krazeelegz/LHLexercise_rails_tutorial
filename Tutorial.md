@@ -114,3 +114,167 @@ Now that we have `@posts` captured, let's use it in our view. You're all familia
     <% end %>
 
 Let's gaze upon the wonder of localhost:3000/posts. Booyah!
+
+## 4. statically routing each post to its own page [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/7f5bdfca1a8c0581932ee7ef7edf4ff6001a1541)
+
+Now that our index page is looking pretty slick, let's add pages for each individual post. How else are you going to link directly to your killer post?
+
+First let's head to `config/routes.rb`:
+
+    LighthouseForum::Application.routes.draw do
+      
+      get 'posts', to: 'posts#index'
+
+      get 'posts/0', to: 'posts#post0'
+      get 'posts/1', to: 'posts#post1'
+      get 'posts/2', to: 'posts#post2'
+      get 'posts/3', to: 'posts#post3'
+
+    end
+
+Now, instead of only being able to handle one type of request, we can handle five. The ones we've added take GET requests to "/posts/0", "/posts/1", "/posts/2", and "/posts/3" and route them to (soon-to-be) controller actions `posts#post0`, `posts#post1`, `posts#post2`, and `posts#post3`. You should have an idea of what to do next: we need to add these methods in our `PostsController`. Let's do it.
+
+    class PostsController < ApplicationController
+
+      [...]
+
+      def post0
+        @post = {
+          title: "Superstar",
+          author: "Carly Rae Jepson",
+          text: <<-eos.gsub(/\s+/, " ").strip
+            Khurram Virani has been my music idol since I started writing
+            songs back when I was 4. His voice is a revelation. His stage presence
+            is unparalleled. And those costumes! He remains an inspiration to this
+            day.
+          eos
+        }
+      end
+
+      def post1
+        @post = {
+          title: "Basketball Idol",
+          author: "Steve Nash",
+          text: <<-eos.gsub(/\s+/, " ").strip
+            I remember watching Khurram Virani (#14) play back when he just playing
+            pickup games on the street. Dude had moves nobody had ever seen. Breaking
+            ankles. Poppin' threes. Great all-around game.
+          eos
+        }
+      end
+
+      def post2
+        @post = {
+          title: "Acting Legend",
+          author: "Michael J. Fox",
+          text: <<-eos.gsub(/\s+/, " ").strip
+            Back when I was in university, Khurram Virani was my acting coach. He
+            studied with the best and it shows. His acting chops were already legendary
+            before his teaching career began. But it seems he's actually improved!
+          eos
+        }
+      end
+
+      def post3
+        @post = {
+          title: "Who?",
+          author: "Vurram Khirani",
+          text: "Never heard of this guy Khurram Virani, but he sounds great."
+        }
+      end
+
+    end
+
+Okay now that we've set these `@post` variables, let's create the views that correlate.
+`touch app/views/posts/post0.html.erb`
+`touch app/views/posts/post1.html.erb`
+`touch app/views/posts/post2.html.erb`
+`touch app/views/posts/post3.html.erb`
+
+I guess we should actually display something on these pages. Add this to each file:
+
+    <h2><%= @post[:title] %></h2>
+    <p><%= @post[:text] %></p>
+    <small>- <%= @post[:author] %></small>
+
+Excellent. Now when we visit localhost:3000/posts/0, we see the correct post's info. Startin' to feel like somethin'!
+
+## 5. refactoring static individual post routes to dynamic posts#show [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/864971e3909cb665848faa67d3e78cf03753fdf7)
+
+Okay, I hope your DRY-dey sense (© Alex Naser, 2013) tingled as you were typing "0," "1," "2," and "3" in your routes, controller, and views. Obviously it won't take long for our application to get completely unmaintainable if we have to manually add a route for every single post. Crazy talk. Let's start to fix it.
+
+First, we're going to delete those four routes we added previously and a single line in its place. `config/routes.rb` should look like this:
+
+    LighthouseForum::Application.routes.draw do
+      
+      get 'posts', to: 'posts#index'
+      get 'posts/:id', to: 'posts#show'
+
+    end
+
+Notice our new line has something that looks suspiciously like a variable. `:id` simply means that if a request comes in with "/posts/192023675" or anything else after "/posts", it can handle it no problem.
+
+As you've guessed, we're going to need to remove our silly `posts#post0` methods and add a `posts#show` in our `PostsController`. Here we go:
+
+class PostsController < ApplicationController
+
+      def index
+        [...]
+      end
+
+      def show
+        posts = [
+          {
+            title: "Superstar",
+            author: "Carly Rae Jepson",
+            text: <<-eos.gsub(/\s+/, " ").strip
+              Khurram Virani has been my music idol since I started writing
+              songs back when I was 4. His voice is a revelation. His stage presence
+              is unparalleled. And those costumes! He remains an inspiration to this
+              day.
+            eos
+          },
+          {
+            title: "Basketball Idol",
+            author: "Steve Nash",
+            text: <<-eos.gsub(/\s+/, " ").strip
+              I remember watching Khurram Virani (#14) play back when he just playing
+              pickup games on the street. Dude had moves nobody had ever seen. Breaking
+              ankles. Poppin' threes. Great all-around game.
+            eos
+          },
+          {
+            title: "Acting Legend",
+            author: "Michael J. Fox",
+            text: <<-eos.gsub(/\s+/, " ").strip
+              Back when I was in university, Khurram Virani was my acting coach. He
+              studied with the best and it shows. His acting chops were already legendary
+              before his teaching career began. But it seems he's actually improved!
+            eos
+          },
+          {
+            title: "Who?",
+            author: "Vurram Khirani",
+            text: "Never heard of this guy Khurram Virani, but he sounds great."
+          }
+        ]
+        @post = posts[params[:id].to_i]
+      end
+
+    end
+
+Notice we're setting `@post` based on something called `params[:id]`. This is where that `:id` gets set from our dynamic routing line `get 'posts/**:id**, to: 'posts#show'`. `params` is simply a hash that stores information dealing with requests. Since our routes file is looking for stuff after "/posts," it knows to capture that number (usually a number) in `params[:id]` and pass it through to the appropriate controller. Very cool.
+
+All we have to do now is `touch app/views/posts/show.html.erb`, and add the markup we had in the individual files:
+
+    <h2><%= @post[:title] %></h2>
+    <p><%= @post[:text] %></p>
+    <small>- <%= @post[:author] %></small>
+
+Might as well get rid of those other lame files now too.
+`rm app/views/posts/post0.html.erb`
+`rm app/views/posts/post1.html.erb`
+`rm app/views/posts/post2.html.erb`
+`rm app/views/posts/post3.html.erb`
+
+RIP files. You will not be missed.
