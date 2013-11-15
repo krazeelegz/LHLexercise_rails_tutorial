@@ -216,7 +216,7 @@ Notice our new line has something that looks suspiciously like a variable. `:id`
 
 As you've guessed, we're going to need to remove our silly `posts#post0` methods and add a `posts#show` in our `PostsController`. Here we go:
 
-class PostsController < ApplicationController
+    class PostsController < ApplicationController
 
       def index
         [...]
