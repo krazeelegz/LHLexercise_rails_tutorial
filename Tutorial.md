@@ -39,7 +39,7 @@ But now we have another error: "uninitialized constant PostsController". Let's f
       
     end
 
-As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `[ActionController::Base](http://guides.rubyonrails.org/action_controller_overview.html)` which is where the real magic happens.)
+As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `ActionController::Base` which is where the real [magic](http://guides.rubyonrails.org/action_controller_overview.html) happens.)
 
 Visit [localhost:3000/posts](http://localhost:3000/posts) once more and it's found `PostsController`, but unfortunately it's letting us know the "action `index` could not be found for `PostsController`." Makes sense. We've written `get 'posts', to: 'posts#**index**'` but there's no `index` in our `PostsController`. Let's add it:
 
@@ -117,7 +117,7 @@ Let's gaze upon the wonder of [localhost:3000/posts](http://localhost:3000/posts
 
 ## 4. statically routing each post to its own page [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/7f5bdfca1a8c0581932ee7ef7edf4ff6001a1541)
 
-Now that our index page is looking pretty slick, let's add pages for each individual post. How else are you going to link directly to your killer post?
+Now that our index page is looking pretty nice, let's add pages for each individual post. How else are you going to link directly to your killer post?
 
 First let's head to `config/routes.rb`:
 
@@ -132,7 +132,7 @@ First let's head to `config/routes.rb`:
 
     end
 
-Now, instead of only being able to handle one type of request, we can handle five. The ones we've added take GET requests to "/posts/0", "/posts/1", "/posts/2", and "/posts/3" and route them to (soon-to-be) controller actions `posts#post0`, `posts#post1`, `posts#post2`, and `posts#post3`. You should have an idea of what to do next: we need to add these methods in our `PostsController`. Let's do it.
+Now instead of only being able to handle one type of request, we can handle five. The ones we've added take GET requests to "/posts/0", "/posts/1", "/posts/2", and "/posts/3" and route them to (soon-to-be) controller actions `posts#post0`, `posts#post1`, `posts#post2`, and `posts#post3`. You should have an idea of what to do next: we need to add these methods in our `PostsController`. Let's do it.
 
     class PostsController < ApplicationController
 
@@ -203,7 +203,7 @@ Excellent. Now when we visit [localhost:3000/posts/0](http://localhost:3000/post
 
 Okay, I hope your DRY-dey sense (© Alex Naser, 2013) tingled as you were typing "0," "1," "2," and "3" in your routes, controller, and views. Obviously it won't take long for our application to get completely unmaintainable if we have to manually add a route for every single post. Crazy talk. Let's start to fix it.
 
-First, we're going to delete those four routes we added previously and add a single line in its place. `config/routes.rb` should look like this:
+First, we're going to delete those four routes we added previously and add a single line in its place. `config/routes.rb` should now look like this:
 
     LighthouseForum::Application.routes.draw do
       
@@ -263,7 +263,7 @@ As you've guessed, we're going to need to remove our silly `posts#post0` methods
 
     end
 
-Notice we're now setting `@post` based on something called `params[:id]`. This is where that `:id` gets set from our dynamic routing line `get 'posts/**:id**, to: 'posts#show'`. `params` is simply a hash that stores information dealing with requests. Since our routes file is looking for stuff after "/posts," it knows to capture that number (usually a number) in `params[:id]` and pass it through to the appropriate controller. Very cool.
+Notice we're now setting `@post` based on something called `params[:id]`. This is where that `:id` gets set from our dynamic routing line `get 'posts/**:id**, to: 'posts#show'`. [params](http://guides.rubyonrails.org/action_controller_overview.html#parameters) is simply a hash that stores information dealing with requests. Since our routes file is looking for stuff after "/posts," it knows to capture that number in `params[:id]` and pass it through to the appropriate controller. Very cool.
 
 All we have to do now is `touch app/views/posts/show.html.erb`, and add the markup we had in the individual files:
 
@@ -287,7 +287,7 @@ Instead of dealing with posts represented as hashes, let's create a database tab
 
     rails generate model Post title:string author:string text:text
 
-You'll notice from the output that we've now created several files. There are two important ones for now: `app/models/post.rb`, and `db/migrate/[timestamp]_create_posts.rb`.
+You'll notice from the output that we've created several files. There are two important ones for now: `app/models/post.rb`, and `db/migrate/[timestamp]_create_posts.rb`.
 
 In `app/models/post.rb`, we see the following bare-bones code:
 
@@ -314,7 +314,7 @@ Notice how the `string`s and `text` from our `rails generate` command translate 
 
 ## 7. moving posts into db via seeds.rb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/6aeaa552ecffb5fc44f98aa84bd87f4e6da91289)
 
-Now that we have a db table to hold our data, let's get rid of these crazy hashes in our `PostsController`.
+Now that we have a db table to hold our data, let's get rid of those crazy hashes in our `PostsController`.
 
 First, head to `db/seeds.rb` and create some post records using the ActiveRecord syntax you know and love:
 
@@ -359,9 +359,9 @@ First, head to `db/seeds.rb` and create some post records using the ActiveRecord
 
 Now to get these into the database (to _seed_ the database), run `rake db:seed` from the command line. Great! We have four records in the database! Wait, how do we know?
 
-Let's run `rails console` from the command line. Here in the console we now have access to our development environment. So if you type `Post.all`, you can confirm that our beautiful little posts are stored safely in the db. `rails console` will be your best friend as you continue to work with Rails. Learn to love it. For now, type `exit` and let's move on.
+Let's run `rails console` from the command line. Here in the [console](http://guides.rubyonrails.org/command_line.html#rails-console) we now have access to our development environment. So if you type `Post.all`, you can confirm that our posts are stored safely in the db. `rails console` will be your best friend as you continue to work with Rails. Learn to love it. For now, type `exit` and let's move on.
 
-In `app/controllers/posts_controller.rb`, we can simply fetch the post or posts we need with ActiveRecord. This is all we need:
+In `app/controllers/posts_controller.rb`, we can now simply fetch the post or posts we need with ActiveRecord. This is all we need:
 
     class PostsController < ApplicationController
 
@@ -375,7 +375,7 @@ In `app/controllers/posts_controller.rb`, we can simply fetch the post or posts 
 
     end
 
-So fresh and so clean. Let's take care of one more thing. Now that @posts and @post are ActiveRecord objects and not vanilla hashes, let's edit our views to use more idiomatic syntax. For example, instead of `@post[:title]`, type `@post.title`.
+[So fresh and so clean](http://www.youtube.com/watch?v=-JfEJq56IwI). Let's take care of one more thing. Now that @posts and @post are ActiveRecord objects and not vanilla hashes, let's edit our views to use more idiomatic syntax. For example, instead of `@post[:title]`, type `@post.title`.
 
 `app/views/index.html.erb`:
 
@@ -397,7 +397,7 @@ This is really coming together nicely.
 
 ## 8. adding new post functionality [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/5a35db29ca224a278fa349f66d2619c3c396e2cb)
 
-I'm sure you guys have been wondering: "Sure, this is fine, but the whole point of this is actually _creating new posts_." Let's get to it.
+I'm sure you guys have been wondering: "Sure, this is fine, but the whole point of this is actually _creating new posts_!" Let's get to it.
 
 First, we'll need two new routes to help. In `config/routes.rb`:
 
@@ -410,7 +410,7 @@ First, we'll need two new routes to help. In `config/routes.rb`:
 
     end
 
-The route pointing to `posts#new` makes enough sense, but what about that `post 'posts'`? As you might have guessed, this simply means it will route all POST requests at "/posts" to the `create` action (method) in our `PostsController`. We'll talk about how to initiate that POST request in a bit.
+The route pointing to `posts#new` makes enough sense, but what about that `post 'posts'`? As you might have guessed, this simply means it will route all POST requests to "/posts" to the `create` action (method) in our `PostsController`. We'll talk about how to initiate that POST request in a bit.
 
 For now, let's tackle `posts#new`.
 
@@ -447,9 +447,9 @@ We'll leave it blank for a minute while we work on its view, `app/views/posts/ne
       </div>
     <% end %>
 
-There's a lot going on here, I know. First, we're using a method called form_for. It's worth reading a bit now about the heavy lifting it helps with. In short, it makes a POST request to "/posts".
+There's a lot going on here, I know. First, we're using a method called [form_for](http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-form_for). It's worth reading a bit now about the heavy lifting it helps with. But in short, it makes a POST request to "/posts".
 
-If we visit localhost:3000/posts/new, we hit an error though: "First argument in form cannot contain nil or be empty." You may have figured out that we haven't actually set that `@post` in the `form_for` in our `PostsController` `new` action. If we add the following:
+If we visit [localhost:3000/posts/new](http://localhost:3000/posts/new), we hit an error though: "First argument in form cannot contain nil or be empty." You may have figured out that we haven't actually set that `@post` in the `form_for` in our `PostsController` `new` action. If we add the following:
 
     class PostsController < ApplicationController
 
@@ -463,7 +463,7 @@ If we visit localhost:3000/posts/new, we hit an error though: "First argument in
 
 Our `form_**for**` knows the type of object it's **for**. (Nailed it.)
 
-Let's take this form for a test run. Input some text into each field and click "Submit." We hit another error: "action 'create' could not be found for PostsController." This is a good thing! It means our form is making a POST request to "/posts", and our routing of `post 'posts', to: 'posts#create'` is working as expected. All we have to do now is add the `create` action in `app/controllers/posts_controller.rb`:
+Let's take this form for a test run. Input some text into each field and click "Submit." We hit another error: "action `create` could not be found for `PostsController`." This is a good thing! It means our form is making a POST request to "/posts", and our routing of `post 'posts', to: 'posts#create'` is working as expected. All we have to do now is add the `create` action in `app/controllers/posts_controller.rb`:
 
     class PostsController < ApplicationController
 
@@ -485,11 +485,15 @@ Let's take this form for a test run. Input some text into each field and click "
 
     end
 
-First, we build a `Post` object with the three fields from our form via the `params` hash. Notice the fields are nested inside the hash like this: `{params: {post: {title: [user_input], author: [user_input], text: [user_input]}}}`. Then we attempt to save it. On success, we'll redirect to the `posts_path`, and on failure, we'll simply render the `new` page with our form again.
+First, we build a `Post` object with the three fields from our form via the `params` hash. Notice the fields are nested inside the hash like this:
+
+    {params: {post: {title: [user_input], author: [user_input], text: [user_input]}}}
+
+Then we attempt to save it. On success, we'll redirect to the `posts_path`, and on failure, we'll simply render the `new` page with our form again.
 
 The `posts_path` may look foreign. From the console, you can type `rake routes` to see your routes at any given time. Notice Rails generates names like `posts_path` to help us in our controllers and views. Here we're simply redirecting back to `index` page to see our new post with all the rest.
 
-We have one more thing to take care of before moving on. Because of a relatively newfound security issue, Rails has adopted a standard for what we call mass assignment. You can read more about it [here](https://github.com/rails/strong_parameters), and adjust your `PostsController` like so:
+We have one more thing to take care of before moving on. Because of a relatively newfound security issue, Rails has adopted a standard called "strong parameters" for mass assignment. You can read more about it [here](https://github.com/rails/strong_parameters), and adjust your `PostsController` like so:
 
     class PostsController < ApplicationController
 
@@ -513,7 +517,7 @@ We have one more thing to take care of before moving on. Because of a relatively
 
     end
 
-Note we can use protected or private methods in controllers just like any other Ruby class.
+Note we can use protected or private methods in controllers just like any other Ruby class. Nice.
 
 ## 9. adding edit post functionality [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/d35360afd2a6825eab872ce32f655138dae28494)
 
@@ -532,7 +536,7 @@ To add the ability to edit a post, our code will look very similar to the code i
 
 Make sure to add the `, as: 'post'` to your `posts#show` line!
 
-Notice we have a different type of request: PATCH. You can read up on the different request types to learn why PATCH is now the Rails default for `update` actions.
+Notice we have a new type of request: PATCH. You can [read up](http://net.tutsplus.com/tutorials/other/a-beginners-introduction-to-http-and-rest/) on the different request types to learn why PATCH is now the Rails default for `update` actions.
 
 Now let's add our controller actions in `app/controllers/posts_controller.rb`:
 
@@ -585,11 +589,11 @@ Go ahead and `touch app/views/posts/edit.html.erb` and add this markup:
       </div>
     <% end %>
 
-Now if you visit localhost:3000/posts/1/edit, you'll see `Post.find(1)`'s data already in the form, ready for you to edit. Click "Save", see the changes on the `index` page, and let's move on!
+Now when you visit [localhost:3000/posts/1/edit](http://localhost:3000/posts/1/edit), you'll see `Post.find(1)`'s data already in the form, ready for you to edit. Click "Save", see the changes on the `index` page, and let's move on!
 
 ## 10. refactoring routes to use resources [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/139739b2271744e5d7d6462aa17fd482987c883d)
 
-Since the CRUD actions we've been working on are so common, Rails provides us with the very helpful `resources` method available in our `config/routes.rb`. Refactor it to look like this:
+Since the CRUD actions we've been working on are so common, Rails provides us with the very helpful [resources](http://api.rubyonrails.org/classes/ActionDispatch/Routing/Mapper/Resources.html) method available in our `config/routes.rb`. Refactor it to look like this:
 
     LighthouseForum::Application.routes.draw do
       
@@ -601,9 +605,9 @@ And voila! Everything _just works_. You can even `rake routes` again to make sur
 
 ## 11. adding navigation using helpers [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/39df840a9f4aca8eb1f693f57d523ef15f83b660)
 
-I can't believe you haven't gotten mad at me for waiting this long to add some freaking hyperlinks. I'm sorry!
+I can't believe you haven't gotten mad at me for waiting this long to add some freaking hyperlinks. Oh you have? I'm sorry!
 
-Rails gives us access to a helpful method in views called `link_to` that makes navigation maintainable within your app. Let's start by adding links on `app/views/posts/index.html.erb` to create a post and to each existing post:
+Rails gives us access to a helpful method in views called [link_to](http://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-link_to) that makes navigation maintainable within your app. Let's start by adding links on `app/views/posts/index.html.erb` to create a post and to view each existing post:
 
     <h1>Lighthouse Forum</h1>
     <hr>
@@ -617,7 +621,7 @@ Rails gives us access to a helpful method in views called `link_to` that makes n
 
 We've gotten our `new_post_path` and `post_path` from `resources`. Notice you pass `post_path` the object itself, so Rails knows which record you'd like to display.
 
-Let's zoom through these other views.
+Let's zip through these other views.
 
 `app/views/posts/show.html.erb`:
 
@@ -657,7 +661,7 @@ So let's jump straight to `app/controllers/posts_controller.rb`:
 
     end
 
-Easy enough. Let's add a place to actually trigger this DELETE request from our app. How about `app/views/posts/show.html.erb`?
+Easy enough. But we need to actually trigger this DELETE request from our app. How about in `app/views/posts/show.html.erb`?
 
     <%= link_to "Back to all posts", posts_path %>
     <h2><%= @post.title %> (<%= link_to "edit", edit_post_path(@post) %>, <%= link_to "delete", post_path(@post), method: :delete, confirm: "You sure?" %>)</h2>
@@ -679,7 +683,7 @@ Currently, if you visit localhost:3000, you'll still see that silly Rails defaul
 
     end
 
-Now when you visit localhost:3000, all is right with the world.
+Now when you visit [localhost:3000](http://localhost:3000), all is right with the world.
 
 ***
 A serious congrats on building your first Rails app. They'll only get cooler from here.
