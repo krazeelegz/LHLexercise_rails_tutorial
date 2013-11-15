@@ -203,7 +203,7 @@ Excellent. Now when we visit localhost:3000/posts/0, we see the correct post's i
 
 Okay, I hope your DRY-dey sense (© Alex Naser, 2013) tingled as you were typing "0," "1," "2," and "3" in your routes, controller, and views. Obviously it won't take long for our application to get completely unmaintainable if we have to manually add a route for every single post. Crazy talk. Let's start to fix it.
 
-First, we're going to delete those four routes we added previously and a single line in its place. `config/routes.rb` should look like this:
+First, we're going to delete those four routes we added previously and add a single line in its place. `config/routes.rb` should look like this:
 
     LighthouseForum::Application.routes.draw do
       
@@ -263,7 +263,7 @@ class PostsController < ApplicationController
 
     end
 
-Notice we're setting `@post` based on something called `params[:id]`. This is where that `:id` gets set from our dynamic routing line `get 'posts/**:id**, to: 'posts#show'`. `params` is simply a hash that stores information dealing with requests. Since our routes file is looking for stuff after "/posts," it knows to capture that number (usually a number) in `params[:id]` and pass it through to the appropriate controller. Very cool.
+Notice we're now setting `@post` based on something called `params[:id]`. This is where that `:id` gets set from our dynamic routing line `get 'posts/**:id**, to: 'posts#show'`. `params` is simply a hash that stores information dealing with requests. Since our routes file is looking for stuff after "/posts," it knows to capture that number (usually a number) in `params[:id]` and pass it through to the appropriate controller. Very cool.
 
 All we have to do now is `touch app/views/posts/show.html.erb`, and add the markup we had in the individual files:
 
