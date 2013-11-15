@@ -8,7 +8,7 @@ As you've probably noticed, this tutorial is divided into handy commits for not 
 
 ## 1. rails new [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/e1390feced2e0d965da1e86c80fe9add4a0ab051)
 
-To create a Rails app, your job couldn't be any easier. From the console for this app, type `rails new lighthouse_forum`. `cd` into the directory, open it with your editor of choice, and behold the ~magic of Rai~ WHOA that's a ton of files.
+To create a Rails app, your job couldn't be any easier. From the console for this app, type `rails new lighthouse_forum`. `cd` into the directory, open it with your editor of choice, and behold the ~~magic of Rai~~ WHOA that's a ton of files.
 
 Here's a nice rundown of all of these files, but we'll walk through the ones you'll need for this tutorial as we go.
 
