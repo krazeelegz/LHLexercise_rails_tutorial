@@ -31,7 +31,7 @@ Find your `config/routes.rb` and add this code:
       # [tons of helpful comments]
     end
 
-As you can get, this is where [Rails' routing](http://guides.rubyonrails.org/routing.html) is handled. Now when we visit localhost:3000/posts, we see Rails has successfully routed the request. It recognized the request to `posts` as a GET request.
+As you can get, this is where [Rails' routing](http://guides.rubyonrails.org/routing.html) is handled. Now when we visit [localhost:3000/posts](http://localhost:3000/posts), we see Rails has successfully routed the request. It recognized the request to `posts` as a GET request.
 
 But now we have another error: "uninitialized constant PostsController". Let's fix this by putting said PostsController in the correct spot. From the console, `touch app/controllers/posts_controller.rb`, and write the following code:
 
@@ -51,7 +51,7 @@ Visit [localhost:3000/posts](http://localhost:3000/posts) once more and it's fou
 
     end
 
-Okay almost there! Visit localhost:3000/posts again and we see that our "template is missing." Easy fix. Let's create that template in the right spot. `mkdir app/views/posts` and `touch app/views/posts/index.html.erb`. We can leave it blank for now. The important thing is: localhost:3000/posts is displaying correctly!
+Okay almost there! Visit [localhost:3000/posts](http://localhost:3000/posts) again and we see that our "template is missing." Easy fix. Let's create that template in the right spot. `mkdir app/views/posts` and `touch app/views/posts/index.html.erb`. We can leave it blank for now. The important thing is: [localhost:3000/posts](http://localhost:3000/posts) is displaying correctly!
 
 ## 3. displaying posts on /posts/index.html.erb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/1f53cb42a76624f7ccdfb12c17d032aa2dafbf3a)
 
@@ -113,7 +113,7 @@ Now that we have `@posts` captured, let's use it in our view. You're all familia
       <small>- <%= post[:author] %></small>
     <% end %>
 
-Let's gaze upon the wonder of localhost:3000/posts. Booyah!
+Let's gaze upon the wonder of [localhost:3000/posts](http://localhost:3000/posts). Booyah!
 
 ## 4. statically routing each post to its own page [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/7f5bdfca1a8c0581932ee7ef7edf4ff6001a1541)
 
@@ -197,7 +197,7 @@ I guess we should actually display something on these pages. Add this to each fi
     <p><%= @post[:text] %></p>
     <small>- <%= @post[:author] %></small>
 
-Excellent. Now when we visit localhost:3000/posts/0, we see the correct post's info. Startin' to feel like somethin'!
+Excellent. Now when we visit [localhost:3000/posts/0](http://localhost:3000/posts/0), we see the correct post's info. Startin' to feel like somethin'!
 
 ## 5. refactoring static individual post routes to dynamic posts#show [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/864971e3909cb665848faa67d3e78cf03753fdf7)
 
