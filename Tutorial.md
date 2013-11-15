@@ -39,4 +39,78 @@ But now we have another error: "uninitialized constant PostsController". Let's f
       
     end
 
-As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `ActionController::Base` which is where the real magic is coming from.)
+As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `ActionController::Base` which is where the real magic happens.)
+
+Visit localhost:3000/posts once more and it's found `PostsController`, but unfortunately it's letting us know the "action `index` could not be found for `PostsController`." Makes sense. We've written `get 'posts', to: 'posts#**index**'` but there's no `index` in our `PostsController`. Let's add it:
+
+    class PostsController < ApplicationController
+
+      def index
+
+      end
+
+    end
+
+Okay almost there! Visit localhost:3000/posts again and we see that our "template is missing." Easy fix. Let's create that template in the right spot. `mkdir app/views/posts` and `touch app/views/posts/index.html.erb`. We can leave it blank for now. The important thing is: localhost:3000/posts is displaying correctly!
+
+## 3. displaying posts on /posts/index.html.erb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/1f53cb42a76624f7ccdfb12c17d032aa2dafbf3a)
+
+Now that we've successfully routed "/posts" to `posts#index` to `app/views/posts/index.html`, let's create some posts and display them.
+
+We can use instance variables in our controller methods (`posts#index`) for use in our views `app/views/posts/index.html`. So for now, let's create an array of hashes to represent posts. Your `app/controllers/posts_controller.rb` should look something like this:
+
+    class PostsController < ApplicationController
+
+      def index
+        @posts = [
+          {
+            title: "Superstar",
+            author: "Carly Rae Jepson",
+            text: <<-eos.gsub(/\s+/, " ").strip
+              Khurram Virani has been my music idol since I started writing
+              songs back when I was 4. His voice is a revelation. His stage presence
+              is unparalleled. And those costumes! He remains an inspiration to this
+              day.
+            eos
+          },
+          {
+            title: "Basketball Idol",
+            author: "Steve Nash",
+            text: <<-eos.gsub(/\s+/, " ").strip
+              I remember watching Khurram Virani (#14) play back when he just playing
+              pickup games on the street. Dude had moves nobody had ever seen. Breaking
+              ankles. Poppin' threes. Great all-around game.
+            eos
+          },
+          {
+            title: "Acting Legend",
+            author: "Michael J. Fox",
+            text: <<-eos.gsub(/\s+/, " ").strip
+              Back when I was in university, Khurram Virani was my acting coach. He
+              studied with the best and it shows. His acting chops were already legendary
+              before his teaching career began. But it seems he's actually improved!
+            eos
+          },
+          {
+            title: "Who?",
+            author: "Vurram Khirani",
+            text: "Never heard of this guy Khurram Virani, but he sounds great."
+          }
+        ]
+      end
+
+    end
+
+(The odd `<<-eos.gsub(/\s+/, " ").strip` syntax is just to allow for multiline strings.)
+
+Now that we have `@posts` captured, let's use it in our view. You're all familiar with ERB so `app/views/posts/index.html.erb` should be no sweat:
+
+    <h1>Lighthouse Forum</h1>
+    <hr>
+    <% @posts.each do |post| %>
+      <h2><%= post[:title] %></h2>
+      <p><%= post[:text] %></p>
+      <small>- <%= post[:author] %></small>
+    <% end %>
+
+Let's gaze upon the wonder of localhost:3000/posts. Booyah!
