@@ -278,3 +278,137 @@ Might as well get rid of those other lame files now too.
 `rm app/views/posts/post3.html.erb`
 
 RIP files. You will not be missed.
+
+## 6. creating Post model and posts db table [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/3eaa764dd2fbd803d916ad424d9ee75737aafc38)
+
+Now's when we put the _database_ in database-backed web application. Sexy!
+
+Instead of dealing with posts represented as hashes, let's create a database table and ActiveRecord model to represent our posts. From the command line, it's easy:
+
+    rails generate model Post title:string author:string text:text
+
+You'll notice from the output that we've now created several files. There are two important ones for now: `app/models/post.rb`, and `db/migrate/[timestamp]_create_posts.rb`.
+
+In `app/models/post.rb`, we see the following bare-bones code:
+
+    class Post < ActiveRecord::Base
+    end
+
+But as we know from our ActiveRecord study thus far, this gives us a ton of power. (We just won't use much of it for this tutorial.)
+
+And in `db/migrate/[timestamp]_create_posts.rb`, we see the following:
+
+    class CreatePosts < ActiveRecord::Migration
+      def change
+        create_table :posts do |t|
+          t.string :title
+          t.string :author
+          t.text :text
+
+          t.timestamps
+        end
+      end
+    end
+
+Notice how the `string`s and `text` from our `rails generate` command translate magically to this migration. We'll dive deeper into this as we get more comfortable with databases. From the command line, type `rake db:migrate` to run this migration and create the posts table with three columns.
+
+## 7. moving posts into db via seeds.rb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/6aeaa552ecffb5fc44f98aa84bd87f4e6da91289)
+
+Now that we have a db table to hold our data, let's get rid of these crazy hashes in our `PostsController`.
+
+First, head to `db/seeds.rb` and create some post records using the ActiveRecord syntax you know and love:
+
+    # [comments]
+
+    Post.create!(
+      title: "Superstar",
+      author: "Carly Rae Jepson",
+      text: <<-eos.gsub(/\s+/, " ").strip
+        Khurram Virani has been my music idol since I started writing
+        songs back when I was 4. His voice is a revelation. His stage presence
+        is unparalleled. And those costumes! He remains an inspiration to this
+        day.
+      eos
+    )
+
+    Post.create!(
+      title: "Basketball Idol",
+      author: "Steve Nash",
+      text: <<-eos.gsub(/\s+/, " ").strip
+        I remember watching Khurram Virani (#14) play back when he just playing
+        pickup games on the street. Dude had moves nobody had ever seen. Breaking
+        ankles. Poppin' threes. Great all-around game.
+      eos
+    )
+
+    Post.create!(
+      title: "Acting Legend",
+      author: "Michael J. Fox",
+      text: <<-eos.gsub(/\s+/, " ").strip
+        Back when I was in university, Khurram Virani was my acting coach. He
+        studied with the best and it shows. His acting chops were already legendary
+        before his teaching career began. But it seems he's actually improved!
+      eos
+    )
+
+    Post.create!(
+      title: "Who?",
+      author: "Vurram Khirani",
+      text: "Never heard of this guy Khurram Virani, but he sounds great."
+    )
+
+Now to get these into the database (to _seed_ the database), run `rake db:seed` from the command line. Great! We have four records in the database! Wait, how do we know?
+
+Let's run `rails console` from the command line. Here in the console we now have access to our development environment. So if you type `Post.all`, you can confirm that our beautiful little posts are stored safely in the db. `rails console` will be your best friend as you continue to work with Rails. Learn to love it. For now, type `exit` and let's move on.
+
+In `app/controllers/posts_controller.rb`, we can simply fetch the post or posts we need with ActiveRecord. This is all we need:
+
+    class PostsController < ApplicationController
+
+      def index
+        @posts = Post.all
+      end
+
+      def show
+        @post = Post.find(params[:id])
+      end
+
+    end
+
+So fresh and so clean. Let's take care of one more thing. Now that @posts and @post are ActiveRecord objects and not vanilla hashes, let's edit our views to use more idiomatic syntax. For example, instead of `@post[:title]`, type `@post.title`.
+
+`app/views/index.html.erb`:
+    <h1>Lighthouse Forum</h1>
+    <hr>
+    <% @posts.each do |post| %>
+      <h2><%= post.title %></h2>
+      <p><%= post.text %></p>
+      <small>- <%= post.author %></small>
+    <% end %>
+
+`app/views/show.html.erb`:
+    <h2><%= @post.title %></h2>
+    <p><%= @post.text %></p>
+    <small>- <%= @post.author %></small>
+
+This is really coming together nicely.
+
+## 8. adding new post functionality [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/5a35db29ca224a278fa349f66d2619c3c396e2cb)
+
+I'm sure you guys have been wondering: "Sure, this is fine, but the whole point of this is actually _creating new posts_." Let's get to it.
+
+First, we'll need two new routes to help. In `config/routes.rb`:
+
+    LighthouseForum::Application.routes.draw do
+      
+      get 'posts',     to: 'posts#index'
+      get 'posts/new', to: 'posts#new'
+      get 'posts/:id', to: 'posts#show'
+      post 'posts',    to: 'posts#create'
+
+    end
+
+The route pointing to `posts#new` makes enough sense, but what about that `post 'posts'`? As you might have guessed, this simply means it will route all POST requests at "/posts" to the `create` action (method) in our `PostsController`. We'll talk about how to initiate that POST request in a bit.
+
+For now, let's tackle `posts#new`.
+
