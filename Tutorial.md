@@ -31,7 +31,7 @@ Find your `config/routes.rb` and add this code:
       # [tons of helpful comments]
     end
 
-As you can get, this is where [Rails' routing](http://guides.rubyonrails.org/routing.html) is handled. Now when we visit [localhost:3000/posts](http://localhost:3000/posts), we see Rails has successfully routed the request. It recognized the request to `posts` as a GET request.
+As you can guess, this is where [Rails' routing](http://guides.rubyonrails.org/routing.html) is handled. Now when we visit [localhost:3000/posts](http://localhost:3000/posts), we see Rails has successfully routed the request. It recognized the request to `posts` as a GET request.
 
 But now we have another error: "uninitialized constant PostsController". Let's fix this by putting said PostsController in the correct spot. From the console, `touch app/controllers/posts_controller.rb`, and write the following code:
 
