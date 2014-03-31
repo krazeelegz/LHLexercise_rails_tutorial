@@ -22,7 +22,7 @@ For this app, we'll need a page that displays all posts. The typical URL structu
 
 If you visit [localhost:3000/posts](http://localhost:3000/posts) now, you'll see an error saying "No route matches `[GET] "/posts"`". This implies we sent a GET request to "/posts", but Rails wasn't sure what we were trying to do. Let's help it.
 
-Find your `config/routes.rb` and add this code:
+Find your `config/routes.rb` and add the `get` line to it so it looks something like this:
 
     LighthouseForum::Application.routes.draw do
 
