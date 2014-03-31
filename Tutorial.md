@@ -41,7 +41,7 @@ But now we have another error: "uninitialized constant PostsController". Let's f
 
 As you know from your experience with Ruby, we've now made a new class `PostsController` that inherits from `ApplicationController`. (If you check out `app/controllers/application_controller.rb`, you'll notice it inherits from `ActionController::Base` which is where the real [magic](http://guides.rubyonrails.org/action_controller_overview.html) happens.)
 
-Visit [localhost:3000/posts](http://localhost:3000/posts) once more and it's found `PostsController`, but unfortunately it's letting us know the "action `index` could not be found for `PostsController`." Makes sense. We've written `get 'posts', to: 'posts#**index**'` but there's no `index` in our `PostsController`. Let's add it:
+Visit [localhost:3000/posts](http://localhost:3000/posts) once more and it's found `PostsController`, but unfortunately it's letting us know the "action `index` could not be found for `PostsController`." Makes sense. We've written `get 'posts', to: 'posts#index'` but there's no `index` in our `PostsController`. Let's add it:
 
     class PostsController < ApplicationController
 
