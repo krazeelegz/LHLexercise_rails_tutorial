@@ -395,6 +395,8 @@ In `app/controllers/posts_controller.rb`, we can now simply fetch the post or po
 
 This is really coming together nicely.
 
+[Suggested edit: As Active Record starts auto-incrementing id from 1 onwards, trying to access `http://localhost:3000/posts/0` corresponding to earlier `app/views/posts/post0.html.erb` would throw a `ActiveRecord::RecordNotFound` error.]
+
 ## 8. adding new post functionality [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/5a35db29ca224a278fa349f66d2619c3c396e2cb)
 
 I'm sure you guys have been wondering: "Sure, this is fine, but the whole point of this is actually _creating new posts_!" Let's get to it.
