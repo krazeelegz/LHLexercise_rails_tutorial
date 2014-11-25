@@ -8,7 +8,16 @@ As you've probably noticed, this tutorial is divided into handy [commits](https:
 
 ## 1. rails new [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/e1390feced2e0d965da1e86c80fe9add4a0ab051)
 
-To create a Rails app, your job couldn't be any easier. From the console for this app, type `rails new lighthouse_forum`. `cd` into the directory, open it with your editor of choice, and behold the ~~magic of Rai~~ WHOA that's a ton of files.
+First, let's make sure you have the right version of rails installed. We are using Rails version 4.0.0.
+
+```
+gem install rails -v 4.0.0
+
+# Then, let's check that the rails command has the right version.
+rails _4.0.0_ --version
+```
+
+To create a Rails app, your job couldn't be any easier. From the console for this app, type `rails _4.0.0_ new lighthouse_forum`. `cd` into the directory, open it with your editor of choice, and behold the ~~magic of Rai~~ WHOA that's a ton of files.
 
 [Here](http://ruby.railstutorial.org/ruby-on-rails-tutorial-book#table-rails_directory_structure)'s a nice rundown of all of these files, but we'll walk through the ones you'll need for this tutorial as we go.
 
@@ -16,7 +25,7 @@ Before we commit, it's a good idea to find your `README.rdoc` that's auto-genera
 
 ## 2. routing /posts to /posts/index.html.erb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/e7165e9c0d49d8add2b177685e8f7126a0f00b16)
 
-Believe it or not at this point, we can already display a page. In the console, type `rails server`, and you'll see the line `Rails [X.X.X] application starting in development on http://0.0.0.0:3000` (among others). This means—you guessed it—you can visit 0.0.0.0:3000 or [localhost:3000](http://localhost:3000) in your browser and see the "Welcome aboard" default Rails page. Success!
+Believe it or not at this point, we can already display a page. In the console, type `bin/rails server`, and you'll see the line `Rails [X.X.X] application starting in development on http://0.0.0.0:3000` (among others). This means—you guessed it—you can visit 0.0.0.0:3000 or [localhost:3000](http://localhost:3000) in your browser and see the "Welcome aboard" default Rails page. Success!
 
 For this app, we'll need a page that displays all posts. The typical URL structure for such a page is `[root]/posts`, so let's try to get [localhost:3000/posts](http://localhost:3000/posts) to display a list of posts. (We don't have them yet, but we will very soon.)
 
@@ -285,7 +294,7 @@ Now's when we put the _database_ in database-backed web application. Sexy!
 
 Instead of dealing with posts represented as hashes, let's create a database table and ActiveRecord model to represent our posts. From the command line, it's easy:
 
-    rails generate model Post title:string author:string text:text
+    bin/rails generate model Post title:string author:string text:text
 
 You'll notice from the output that we've created several files. There are two important ones for now: `app/models/post.rb`, and `db/migrate/[timestamp]_create_posts.rb`.
 
@@ -310,7 +319,7 @@ And in `db/migrate/[timestamp]_create_posts.rb`, we see the following:
       end
     end
 
-Notice how the `string`s and `text` from our `rails generate` command translate magically to this migration. We'll dive deeper into this as we get more comfortable with databases. From the command line, type `rake db:migrate` to run this migration and create the posts table with three columns.
+Notice how the `string`s and `text` from our `bin/rails generate` command translate magically to this migration. We'll dive deeper into this as we get more comfortable with databases. From the command line, type `bin/rake db:migrate` to run this migration and create the posts table with three columns.
 
 ## 7. moving posts into db via seeds.rb [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/6aeaa552ecffb5fc44f98aa84bd87f4e6da91289)
 
@@ -357,9 +366,9 @@ First, head to `db/seeds.rb` and create some post records using the ActiveRecord
       text: "Never heard of this guy Khurram Virani, but he sounds great."
     )
 
-Now to get these into the database (to _seed_ the database), run `rake db:seed` from the command line. Great! We have four records in the database! Wait, how do we know?
+Now to get these into the database (to _seed_ the database), run `bin/rake db:seed` from the command line. Great! We have four records in the database! Wait, how do we know?
 
-Let's run `rails console` from the command line. Here in the [console](http://guides.rubyonrails.org/command_line.html#rails-console) we now have access to our development environment. So if you type `Post.all`, you can confirm that our posts are stored safely in the db. `rails console` will be your best friend as you continue to work with Rails. Learn to love it. For now, type `exit` and let's move on.
+Let's run `bin/rails console` from the command line. Here in the [console](http://guides.rubyonrails.org/command_line.html#rails-console) we now have access to our development environment. So if you type `Post.all`, you can confirm that our posts are stored safely in the db. `bin/rails console` will be your best friend as you continue to work with Rails. Learn to love it. For now, type `exit` and let's move on.
 
 In `app/controllers/posts_controller.rb`, we can now simply fetch the post or posts we need with ActiveRecord. This is all we need:
 
@@ -493,7 +502,7 @@ First, we build a `Post` object with the three fields from our form via the `par
 
 Then we attempt to save it. On success, we'll redirect to the `posts_path`, and on failure, we'll simply render the `new` page with our form again.
 
-The `posts_path` may look foreign. From the console, you can type `rake routes` to see your routes at any given time. Notice Rails generates names like `posts_path` to help us in our controllers and views. Here we're simply redirecting back to `index` page to see our new post with all the rest.
+The `posts_path` may look foreign. From the console, you can type `bin/rake routes` to see your routes at any given time. Notice Rails generates names like `posts_path` to help us in our controllers and views. Here we're simply redirecting back to `index` page to see our new post with all the rest.
 
 We have one more thing to take care of before moving on. Because of a relatively newfound security issue, Rails has adopted a standard called "strong parameters" for mass assignment. You can read more about it [here](https://github.com/rails/strong_parameters), and adjust your `PostsController` like so:
 
@@ -603,7 +612,7 @@ Since the CRUD actions we've been working on are so common, Rails provides us wi
 
     end
 
-And voila! Everything _just works_. You can even `rake routes` again to make sure I'm not pranking you.
+And voila! Everything _just works_. You can even `bin/rake routes` again to make sure I'm not pranking you.
 
 ## 11. adding navigation using helpers [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/39df840a9f4aca8eb1f693f57d523ef15f83b660)
 
@@ -641,7 +650,7 @@ Now we can navigate around the app with ease.
 
 ## 12. adding delete post functionality [★](https://github.com/lighthouse-labs/lighthouse_forum/commit/a39aa380ad44f3c98e05c511a964201afa534ee8)
 
-If we `rake routes`, we can see our DELETE route is already taken care of for us:
+If we `bin/rake routes`, we can see our DELETE route is already taken care of for us:
 
     DELETE /posts/:id(.:format)      posts#destroy
 
