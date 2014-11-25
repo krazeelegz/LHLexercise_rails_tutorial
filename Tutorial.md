@@ -666,7 +666,7 @@ So let's jump straight to `app/controllers/posts_controller.rb`:
 Easy enough. But we need to actually trigger this DELETE request from our app. How about in `app/views/posts/show.html.erb`?
 
     <%= link_to "Back to all posts", posts_path %>
-    <h2><%= @post.title %> (<%= link_to "edit", edit_post_path(@post) %>, <%= link_to "delete", post_path(@post), method: :delete, confirm: "You sure?" %>)</h2>
+    <h2><%= @post.title %> (<%= link_to "edit", edit_post_path(@post) %>, <%= link_to "delete", post_path(@post), :"data-method": => :delete, :confirm => "You sure?" %>)</h2>
     <p><%= @post.text %></p>
     <small>- <%= @post.author %></small>
 
